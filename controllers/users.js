@@ -10,60 +10,54 @@ const { ConflictError } = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-// const login = (req, res, next) => {
-//   const { email, password } = req.body;
+const login = (req, res, next) => {
+  const { email, password } = req.body;
 
-//   User.findUserByCredentials(email, password)
-//     .then((user) => {
-//       const token = jwt.sign(
-//         { _id: user._id },
-//         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-//         { expiresIn: '7d' },
-//       );
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
 
-//       res.send({ token });
-//     })
-//     .catch(next);
-// };
+      res.send({ token });
+    })
+    .catch(next);
+};
 
-// const createUser = (req, res, next) => {
-//   const {
-//     name,
-//     about,
-//     avatar,
-//     email,
-//     password,
-//   } = req.body;
+const createUser = (req, res, next) => {
+  const {
+    name,
+    email,
+    password,
+  } = req.body;
 
-//   bcrypt.hash(password, 10)
-//     .then((hash) => User.create({
-//       email,
-//       password: hash,
-//       name,
-//       about,
-//       avatar,
-//     }))
-//     .then((user) => {
-//       res
-//         .status(CREATED_USER_CODE)
-//         .send({
-//           email: user.email,
-//           name: user.name,
-//           about: user.about,
-//           avatar: user.avatar,
-//         });
-//     })
-//     .catch((err) => {
-//       if (err.code === 11000) {
-//         next(new ConflictError('Данный email уже зарегистрирован'));
-//       } else if (err.name === 'ValidationError') {
-//         const message = Object.values(err.errors).map((error) => error.message).join('; ');
-//         next(new ValidationError(message));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+    }))
+    .then((user) => {
+      res
+        .status(CREATED_USER_CODE)
+        .send({
+          email: user.email,
+          name: user.name,
+        });
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('Данный email уже зарегистрирован'));
+      } else if (err.name === 'ValidationError') {
+        const message = Object.values(err.errors).map((error) => error.message).join('; ');
+        next(new ValidationError(message));
+      } else {
+        next(err);
+      }
+    });
+};
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -108,8 +102,8 @@ const updateProfile = (req, res, next) => {
 };
 
 module.exports = {
-  // createUser,
-  // login,
+  createUser,
+  login,
   getCurrentUser,
   updateProfile,
 };

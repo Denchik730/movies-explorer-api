@@ -15,12 +15,13 @@ routerMovies.post(
       country: Joi.string().required().min(2).max(30),
       director: Joi.string().required().min(2).max(30),
       duration: Joi.string().required().min(2).max(30),
+      description: Joi.string().required().min(2).max(30),
       year: Joi.string().required().min(2).max(30),
       image: Joi
         .string()
         .required()
         .pattern(reg),
-      trailer: Joi
+      trailerLink: Joi
         .string()
         .required()
         .pattern(reg),
