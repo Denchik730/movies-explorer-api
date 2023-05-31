@@ -52,23 +52,23 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const removeCard = () => {
-    Movie.findByIdAndRemove(req.params.cardId)
+  const removeMovie = () => {
+    Movie.findByIdAndRemove(req.params.movieId)
       .then((movie) => res.send(movie))
       .catch(next);
   };
 
-  Movie.findById(req.params.cardId)
+  Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
-        return next(new NotFoundError('Запрашиваемый фильм не найдена'));
+        return next(new NotFoundError('Запрашиваемый фильм не найден'));
       }
 
-      // if (movie.owner.toString() !== req.user._id) {
-      //   return next(new ForbiddenError('Невозможно удалить чужую карточку'));
-      // }
+      if (movie.owner.toString() !== req.user._id) {
+        return next(new ForbiddenError('Невозможно удалить чужую карточку'));
+      }
 
-      return removeCard();
+      return removeMovie();
     })
     .catch(next);
 };
