@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: [3, 'Минимальная длина поля \'password\' - 2'],
-    maxlength: [15, 'Максимальная длина поля \'password\' - 30'],
     select: false,
   },
   name: {
