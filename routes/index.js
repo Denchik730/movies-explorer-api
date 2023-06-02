@@ -7,7 +7,6 @@ const auth = require('../middlewares/auth');
 const { NotFoundError } = require('../errors/NotFoundError');
 const { login } = require('../controllers/users');
 const { createUser } = require('../controllers/users');
-const { reg } = require('../utils/constants');
 
 router.post(
   '/signup',
@@ -31,10 +30,6 @@ router.post(
   }),
   login,
 );
-
-// router.get('/signout', auth, (req, res) => {
-//   res.clearCookie('token').send({ message: 'Выход' });
-// });
 
 router.use('/users', auth, routerUsers);
 router.use('/movies', auth, routerMovies);

@@ -3,7 +3,7 @@ const CREATED_MOVIE_CODE = 201;
 const { Movie } = require('../models/movie');
 const { ValidationError } = require('../errors/ValidationError');
 const { NotFoundError } = require('../errors/NotFoundError');
-// const { ForbiddenError } = require('../errors/ForbiddenError');
+const { ForbiddenError } = require('../errors/ForbiddenError');
 
 const getMovies = (req, res, next) => {
   Movie.find({})

@@ -28,21 +28,21 @@ const movieSchema = new mongoose.Schema({
     validate: {
       validator: (v) => reg.test(v),
       message: (props) => `${props.value} не валидная ссылка`,
-    }
+    },
   },
   trailerLink: {
     type: String,
     validate: {
       validator: (v) => reg.test(v),
       message: (props) => `${props.value} не валидная ссылка`,
-    }
+    },
   },
   thumbnail: {
     type: String,
     validate: {
       validator: (v) => reg.test(v),
       message: (props) => `${props.value} не валидная ссылка`,
-    }
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -67,4 +67,6 @@ const movieSchema = new mongoose.Schema({
 
 const Movie = mongoose.model('movie', movieSchema);
 
-module.exports = { Movie };
+module.exports = {
+  Movie,
+};
