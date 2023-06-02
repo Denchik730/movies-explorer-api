@@ -65,7 +65,7 @@ const deleteMovie = (req, res, next) => {
       }
 
       if (movie.owner.toString() !== req.user._id) {
-        return next(new ForbiddenError('Невозможно удалить чужую карточку'));
+        return next(new ForbiddenError('Невозможно удалить чужой фильм'));
       }
 
       return removeMovie();
