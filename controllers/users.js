@@ -1,5 +1,3 @@
-const CREATED_USER_CODE = 201;
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -7,6 +5,13 @@ const { User } = require('../models/user');
 const { ValidationError } = require('../errors/ValidationError');
 const { NotFoundError } = require('../errors/NotFoundError');
 const { ConflictError } = require('../errors/ConflictError');
+const {
+  USER_NOT_FOUND_MESSAGE,
+  USER_INVALID_DATA_MESSAGE,
+  USER_CONFLICT_EMAIL_MESSAGE,
+  CREATED_CODE,
+  MONGO_DUPLICATE_ERR_CODE,
+} = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -41,7 +46,7 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => {
       res
-        .status(CREATED_USER_CODE)
+        .status(CREATED_CODE)
         .send({
           email: user.email,
           name: user.name,
@@ -63,14 +68,14 @@ const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Запрашиваемый пользователь не найден'));
+        return next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
       }
 
       return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ValidationError('Переданы некорректные данные'));
+        next(new ValidationError(USER_INVALID_DATA_MESSAGE));
       } else {
         next(err);
       }
@@ -85,7 +90,7 @@ const updateProfile = (req, res, next) => {
     runValidators: true,
   }).then((user) => {
     if (!user) {
-      return next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      return next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
     }
 
     return res.send(user);
@@ -94,9 +99,9 @@ const updateProfile = (req, res, next) => {
       const message = Object.values(err.errors).map((error) => error.message).join('; ');
       next(new ValidationError(message));
     } else if (err.name === 'CastError') {
-      next(new ValidationError('Переданы некорректные данные'));
-    } else if (err.code === 11000) {
-      next(new ConflictError('Такой email уже зарегистрирован'));
+      next(new ValidationError(USER_INVALID_DATA_MESSAGE));
+    } else if (err.code === MONGO_DUPLICATE_ERR_CODE) {
+      next(new ConflictError(USER_CONFLICT_EMAIL_MESSAGE));
     } else {
       next(err);
     }

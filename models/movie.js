@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { reg } = require('../utils/constants');
 
+const { INVALID_LINK_MESSAGE } = require('../utils/constants');
+
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -27,21 +29,21 @@ const movieSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (v) => reg.test(v),
-      message: (props) => `${props.value} не валидная ссылка`,
+      message: (props) => `${props.value} ${INVALID_LINK_MESSAGE}`,
     },
   },
   trailerLink: {
     type: String,
     validate: {
       validator: (v) => reg.test(v),
-      message: (props) => `${props.value} не валидная ссылка`,
+      message: (props) => `${props.value} ${INVALID_LINK_MESSAGE}`,
     },
   },
   thumbnail: {
     type: String,
     validate: {
       validator: (v) => reg.test(v),
-      message: (props) => `${props.value} не валидная ссылка`,
+      message: (props) => `${props.value} ${INVALID_LINK_MESSAGE}`,
     },
   },
   owner: {
