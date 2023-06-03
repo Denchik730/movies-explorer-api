@@ -7,6 +7,12 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+const optionDatabase = {
+  useNewUrlParser: true,
+  autoIndex: true,
+};
+
 module.exports = {
   limiter,
+  optionDatabase,
 };

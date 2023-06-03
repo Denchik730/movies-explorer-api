@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const { limiter } = require('./utils/configuration');
+const { limiter, optionDatabase } = require('./utils/configuration');
 const { DATABASE_URL } = require('./utils/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
@@ -19,10 +19,10 @@ const app = express();
 
 app.use(cors());
 
-mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : DATABASE_URL, {
-  useNewUrlParser: true,
-  autoIndex: true,
-});
+mongoose.connect(
+  NODE_ENV === 'production' ? MONGO_URL : DATABASE_URL,
+  optionDatabase,
+);
 
 app.use(requestLogger);
 app.use(limiter);
