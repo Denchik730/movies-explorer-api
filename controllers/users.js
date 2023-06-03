@@ -26,6 +26,11 @@ const login = (req, res, next) => {
         { expiresIn: '7d' },
       );
 
+      res.cookie('token', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      });
+
       res.send({ token });
     })
     .catch(next);
@@ -54,7 +59,7 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Данный email уже зарегистрирован'));
+        next(new ConflictError(USER_CONFLICT_EMAIL_MESSAGE));
       } else if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.message).join('; ');
         next(new ValidationError(message));
