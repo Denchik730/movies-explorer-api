@@ -8,27 +8,28 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const { limiter } = require('./utils/configuration');
+const { DATABASE_URL } = require('./utils/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { router } = require('./routes/index');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_URL, NODE_ENV } = process.env;
 
 const app = express();
 
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : DATABASE_URL, {
   useNewUrlParser: true,
   autoIndex: true,
 });
 
+app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(requestLogger);
 
 app.use(router);
 
